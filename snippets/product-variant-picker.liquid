@@ -242,8 +242,10 @@ document.addEventListener("DOMContentLoaded", function () {
     tabs.forEach((tab) => tab.classList.remove("active"));
     panels.forEach((panel) => panel.classList.remove("active"));
 
-    // Activate the selected tab and its panel
+    // Add 'active' class to the selected tab
     selectedTab.classList.add("active");
+
+    // Activate the corresponding panel
     const panelId = selectedTab.getAttribute("data-tab");
     const activePanel = document.getElementById(panelId);
     activePanel.classList.add("active");
@@ -293,7 +295,13 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   });
+
+  // Initialize by setting the first tab and panel as active
+  if (tabs.length > 0) {
+    switchTab(tabs[0]);
+  }
 });
+
 
 
 
