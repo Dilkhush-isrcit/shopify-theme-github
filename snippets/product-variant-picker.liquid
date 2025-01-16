@@ -14,306 +14,81 @@
     data-section="{{ section.id }}"
     {{ block.shopify_attributes }}
   >
-    <div class="product-tabs">
-  <!-- Tab Navigation -->
-  <ul class="tab-menu">
-    {% for option in product.options_with_values %}
-      {% if option.name == 'Men size' %}
-        <li data-tab="men" class="active">Men Size</li>
-      {% endif %}
-      {% if option.name == 'Women size' %}
-        <li data-tab="women">Women Size</li>
-      {% endif %}
-    {% endfor %}
-  </ul>
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign swatch_count = option.values | map: 'swatch' | compact | size
+        assign picker_type = block.settings.picker_type
 
-  <!-- Tab Content -->
-  <div class="tab-content">
-    <!-- Men Size Tab -->
-    <div id="men" class="tab-panel active">
-      {% for option in product.options_with_values %}
-        {% if option.name == 'Men size' %}
-          {%- liquid
-            assign swatch_count = option.values | map: 'swatch' | compact | size
-            assign picker_type = block.settings.picker_type
-
-            if swatch_count > 0 and block.settings.swatch_shape != 'none'
-              if block.settings.picker_type == 'dropdown'
-                assign picker_type = 'swatch_dropdown'
-              else
-                assign picker_type = 'swatch'
-              endif
-            endif
-          -%}
-          {%- if picker_type == 'swatch' -%}
-            <fieldset class="js product-form__input product-form__input--swatch">
-              <legend class="form__label">
-                {{ option.name }}:
-                <span data-selected-value>
-                  {{- option.selected_value -}}
-                </span>
-              </legend>
+        if swatch_count > 0 and block.settings.swatch_shape != 'none'
+          if block.settings.picker_type == 'dropdown'
+            assign picker_type = 'swatch_dropdown'
+          else
+            assign picker_type = 'swatch'
+          endif
+        endif
+      -%}
+      {%- if picker_type == 'swatch' -%}
+        <fieldset class="js product-form__input product-form__input--swatch">
+          <legend class="form__label">
+            {{ option.name }}:
+            <span data-selected-value>
+              {{- option.selected_value -}}
+            </span>
+          </legend>
+          {% render 'product-variant-options',
+            product: product,
+            option: option,
+            block: block,
+            picker_type: picker_type
+          %}
+        </fieldset>
+      {%- elsif picker_type == 'button' -%}
+        <fieldset class="js product-form__input product-form__input--pill">
+          <legend class="form__label">{{ option.name }}</legend>
+          {% render 'product-variant-options',
+            product: product,
+            option: option,
+            block: block,
+            picker_type: picker_type
+          %}
+        </fieldset>
+      {%- else -%}
+        <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            {%- if picker_type == 'swatch_dropdown' -%}
+              <span
+                data-selected-value
+                class="dropdown-swatch"
+              >
+                {% render 'swatch', swatch: option.selected_value.swatch, shape: block.settings.swatch_shape %}
+              </span>
+            {%- endif -%}
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
               {% render 'product-variant-options',
                 product: product,
                 option: option,
                 block: block,
                 picker_type: picker_type
               %}
-            </fieldset>
-          {%- elsif picker_type == 'button' -%}
-            <fieldset class="js product-form__input product-form__input--pill">
-              <legend class="form__label">{{ option.name }}</legend>
-              {% render 'product-variant-options',
-                product: product,
-                option: option,
-                block: block,
-                picker_type: picker_type
-              %}
-            </fieldset>
-          {%- else -%}
-            <div class="product-form__input product-form__input--dropdown">
-              <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
-                {{ option.name }}
-              </label>
-              <div class="select">
-                {%- if picker_type == 'swatch_dropdown' -%}
-                  <span
-                    data-selected-value
-                    class="dropdown-swatch"
-                  >
-                    {% render 'swatch', swatch: option.selected_value.swatch, shape: block.settings.swatch_shape %}
-                  </span>
-                {%- endif -%}
-                <select
-                  id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                  class="select__select"
-                  name="options[{{ option.name | escape }}]"
-                  form="{{ product_form_id }}"
-                >
-                  {% render 'product-variant-options',
-                    product: product,
-                    option: option,
-                    block: block,
-                    picker_type: picker_type
-                  %}
-                </select>
-                <span class="svg-wrapper">
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </span>
-              </div>
-            </div>
-          {%- endif -%}
-        {% endif %}
-      {% endfor %}
-    </div>
-
-    <!-- Women Size Tab -->
-    <div id="women" class="tab-panel">
-      {% for option in product.options_with_values %}
-        {% if option.name == 'Women size' %}
-          {%- liquid
-            assign swatch_count = option.values | map: 'swatch' | compact | size
-            assign picker_type = block.settings.picker_type
-
-            if swatch_count > 0 and block.settings.swatch_shape != 'none'
-              if block.settings.picker_type == 'dropdown'
-                assign picker_type = 'swatch_dropdown'
-              else
-                assign picker_type = 'swatch'
-              endif
-            endif
-          -%}
-          {%- if picker_type == 'swatch' -%}
-            <fieldset class="js product-form__input product-form__input--swatch">
-              <legend class="form__label">
-                {{ option.name }}:
-                <span data-selected-value>
-                  {{- option.selected_value -}}
-                </span>
-              </legend>
-              {% render 'product-variant-options',
-                product: product,
-                option: option,
-                block: block,
-                picker_type: picker_type
-              %}
-            </fieldset>
-          {%- elsif picker_type == 'button' -%}
-            <fieldset class="js product-form__input product-form__input--pill">
-              <legend class="form__label">{{ option.name }}</legend>
-              {% render 'product-variant-options',
-                product: product,
-                option: option,
-                block: block,
-                picker_type: picker_type
-              %}
-            </fieldset>
-          {%- else -%}
-            <div class="product-form__input product-form__input--dropdown">
-              <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
-                {{ option.name }}
-              </label>
-              <div class="select">
-                {%- if picker_type == 'swatch_dropdown' -%}
-                  <span
-                    data-selected-value
-                    class="dropdown-swatch"
-                  >
-                    {% render 'swatch', swatch: option.selected_value.swatch, shape: block.settings.swatch_shape %}
-                  </span>
-                {%- endif -%}
-                <select
-                  id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                  class="select__select"
-                  name="options[{{ option.name | escape }}]"
-                  form="{{ product_form_id }}"
-                >
-                  {% render 'product-variant-options',
-                    product: product,
-                    option: option,
-                    block: block,
-                    picker_type: picker_type
-                  %}
-                </select>
-                <span class="svg-wrapper">
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </span>
-              </div>
-            </div>
-          {%- endif -%}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</div>
-
+            </select>
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
 
     <script type="application/json" data-selected-variant>
       {{ product.selected_or_first_available_variant | json }}
     </script>
-
-    <!-- Add CSS for Styling -->
-<style>
-  .tab-menu {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-bottom: 2px solid #ccc;
-  }
-
-  .tab-menu li {
-    padding: 10px 20px;
-    cursor: pointer;
-    background: #f8f8f8;
-    border: 1px solid #ccc;
-    border-bottom: none;
-  }
-
-  .tab-menu li.active {
-    background: #fff;
-    font-weight: bold;
-    border-bottom: 2px solid #fff;
-  }
-
-  .tab-panel {
-    display: none;
-  }
-
-  .tab-panel.active {
-    display: block;
-  }
-</style>
-
-<!-- Add JavaScript for Tab Functionality -->
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-  const tabs = document.querySelectorAll(".tab-menu li");
-  const panels = document.querySelectorAll(".tab-panel");
-  const tabStates = {
-    men: "",
-    women: "",
-  };
-
-  // Function to handle tab switching
-  function switchTab(selectedTab) {
-    // Remove 'active' class from all tabs and panels
-    tabs.forEach((tab) => tab.classList.remove("active"));
-    panels.forEach((panel) => panel.classList.remove("active"));
-
-    // Add 'active' class to the selected tab
-    selectedTab.classList.add("active");
-
-    // Activate the corresponding panel
-    const panelId = selectedTab.getAttribute("data-tab");
-    const activePanel = document.getElementById(panelId);
-    activePanel.classList.add("active");
-
-    // Restore the previously selected size for the active panel
-    const sizeSelector = activePanel.querySelector("select");
-    if (sizeSelector) {
-      sizeSelector.value = tabStates[panelId] || sizeSelector.options[0].value;
-
-      // Update displayed selected value
-      const selectedValueSpan = activePanel.querySelector("[data-selected-value]");
-      if (selectedValueSpan) {
-        selectedValueSpan.textContent = sizeSelector.value;
-      }
-    }
-  }
-
-  // Attach click event to each tab
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", function () {
-      // Save the size selection of the currently active tab
-      const activePanel = document.querySelector(".tab-panel.active");
-      if (activePanel) {
-        const sizeSelector = activePanel.querySelector("select");
-        if (sizeSelector) {
-          tabStates[activePanel.id] = sizeSelector.value;
-        }
-      }
-
-      // Switch to the clicked tab
-      switchTab(this);
-    });
-  });
-
-  // Handle size selection changes
-  panels.forEach((panel) => {
-    const sizeSelector = panel.querySelector("select");
-    if (sizeSelector) {
-      sizeSelector.addEventListener("change", function () {
-        const selectedValueSpan = panel.querySelector("[data-selected-value]");
-        if (selectedValueSpan) {
-          selectedValueSpan.textContent = this.value;
-        }
-
-        // Save the updated size for the current panel
-        tabStates[panel.id] = this.value;
-
-        // Ensure tab remains on the current panel (no switching)
-        const activeTab = document.querySelector(`.tab-menu li[data-tab="${panel.id}"]`);
-        if (activeTab) {
-          activeTab.classList.add("active");
-        }
-      });
-    }
-  });
-
-  // Initialize by setting the first tab and panel as active
-  if (tabs.length > 0) {
-    switchTab(tabs[0]);
-  }
-});
-
-
-
-
-
-
-</script>
-    
   </variant-selects>
 {%- endunless -%}
