@@ -231,42 +231,40 @@
 document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.querySelectorAll(".tab-menu li");
   const panels = document.querySelectorAll(".tab-panel");
-
-  // Object to store selected sizes for each tab
   const tabStates = {
-    "men-panel": "",
-    "women-panel": "",
+    men: "",
+    women: "",
   };
 
-  // Function to switch tabs
+  // Function to handle tab switching
   function switchTab(selectedTab) {
-    // Deactivate all tabs and panels
+    // Remove 'active' class from all tabs and panels
     tabs.forEach((tab) => tab.classList.remove("active"));
     panels.forEach((panel) => panel.classList.remove("active"));
 
-    // Activate selected tab and panel
+    // Activate the selected tab and its panel
     selectedTab.classList.add("active");
     const panelId = selectedTab.getAttribute("data-tab");
-    const panel = document.getElementById(panelId);
-    panel.classList.add("active");
+    const activePanel = document.getElementById(panelId);
+    activePanel.classList.add("active");
 
-    // Restore size selection for the activated panel
-    const sizeSelector = panel.querySelector("select");
+    // Restore the previously selected size for the active panel
+    const sizeSelector = activePanel.querySelector("select");
     if (sizeSelector) {
       sizeSelector.value = tabStates[panelId] || sizeSelector.options[0].value;
 
-      // Update visible selected value
-      const selectedValueSpan = panel.querySelector("[data-selected-value]");
+      // Update displayed selected value
+      const selectedValueSpan = activePanel.querySelector("[data-selected-value]");
       if (selectedValueSpan) {
         selectedValueSpan.textContent = sizeSelector.value;
       }
     }
   }
 
-  // Event listener for tab click
+  // Attach click event to each tab
   tabs.forEach((tab) => {
     tab.addEventListener("click", function () {
-      // Save the current state before switching tabs
+      // Save the size selection of the currently active tab
       const activePanel = document.querySelector(".tab-panel.active");
       if (activePanel) {
         const sizeSelector = activePanel.querySelector("select");
@@ -280,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Event listener for size dropdown change
+  // Handle size selection changes
   panels.forEach((panel) => {
     const sizeSelector = panel.querySelector("select");
     if (sizeSelector) {
@@ -290,12 +288,13 @@ document.addEventListener("DOMContentLoaded", function () {
           selectedValueSpan.textContent = this.value;
         }
 
-        // Save the state for the current panel
+        // Save the updated size for the current panel
         tabStates[panel.id] = this.value;
       });
     }
   });
 });
+
 
 
 
