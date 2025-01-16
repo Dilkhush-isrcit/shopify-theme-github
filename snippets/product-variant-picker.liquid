@@ -292,6 +292,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Save the updated size for the current panel
         tabStates[panel.id] = this.value;
+
+        // Ensure tab remains on the current panel (no switching)
+        const activeTab = document.querySelector(`.tab-menu li[data-tab="${panel.id}"]`);
+        if (activeTab) {
+          activeTab.classList.add("active");
+        }
       });
     }
   });
@@ -301,6 +307,7 @@ document.addEventListener("DOMContentLoaded", function () {
     switchTab(tabs[0]);
   }
 });
+
 
 
 
