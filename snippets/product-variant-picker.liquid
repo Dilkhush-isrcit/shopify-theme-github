@@ -107,3 +107,35 @@
     </script>
   </variant-selects>
 {%- endunless -%}
+
+<style>
+  .tab-menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .tab-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+
+  .tab-menu li.active {
+    background: #fff;
+    font-weight: bold;
+    border-bottom: 2px solid #fff;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+</style>
