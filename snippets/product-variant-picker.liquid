@@ -14,6 +14,21 @@
     data-section="{{ section.id }}"
     {{ block.shopify_attributes }}
   >
+
+      <div class="product-tabs">
+        <!-- Tab Navigation -->
+        <ul class="tab-menu">
+          {% for option in product.options_with_values %}
+            {% if option.name == 'Men size' %}
+              <li data-tab="men" class="active">Men Size</li>
+            {% endif %}
+            {% if option.name == 'Women size' %}
+              <li data-tab="women">Women Size</li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    
     {%- for option in product.options_with_values -%}
       {%- liquid
         assign swatch_count = option.values | map: 'swatch' | compact | size
