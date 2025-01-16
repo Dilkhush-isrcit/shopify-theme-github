@@ -139,3 +139,21 @@
     display: block;
   }
 </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".tab-menu li");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", function () {
+        tabs.forEach((t) => t.classList.remove("active"));
+        panels.forEach((panel) => panel.classList.remove("active"));
+
+        this.classList.add("active");
+        const panelId = this.getAttribute("data-tab");
+        document.getElementById(panelId).classList.add("active");
+      });
+    });
+  });
+</script>
