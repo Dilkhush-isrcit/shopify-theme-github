@@ -191,5 +191,58 @@
     <script type="application/json" data-selected-variant>
       {{ product.selected_or_first_available_variant | json }}
     </script>
+
+    <!-- Add CSS for Styling -->
+<style>
+  .tab-menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .tab-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    border-bottom: none;
+  }
+
+  .tab-menu li.active {
+    background: #fff;
+    font-weight: bold;
+    border-bottom: 2px solid #fff;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+</style>
+
+<!-- Add JavaScript for Tab Functionality -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabs = document.querySelectorAll(".tab-menu li");
+    const panels = document.querySelectorAll(".tab-panel");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", function () {
+        tabs.forEach((t) => t.classList.remove("active"));
+        panels.forEach((panel) => panel.classList.remove("active"));
+
+        this.classList.add("active");
+        const panelId = this.getAttribute("data-tab");
+        document.getElementById(panelId).classList.add("active");
+      });
+    });
+  });
+</script>
+    
   </variant-selects>
 {%- endunless -%}
