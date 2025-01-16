@@ -228,20 +228,49 @@
 <!-- Add JavaScript for Tab Functionality -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const tabs = document.querySelectorAll(".tab-menu li");
-    const panels = document.querySelectorAll(".tab-panel");
+  const tabs = document.querySelectorAll(".tab-menu li");
+  const panels = document.querySelectorAll(".tab-panel");
 
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", function () {
-        tabs.forEach((t) => t.classList.remove("active"));
-        panels.forEach((panel) => panel.classList.remove("active"));
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", function () {
+      // Remove active class from all tabs and panels
+      tabs.forEach((t) => t.classList.remove("active"));
+      panels.forEach((panel) => panel.classList.remove("active"));
 
-        this.classList.add("active");
-        const panelId = this.getAttribute("data-tab");
-        document.getElementById(panelId).classList.add("active");
+      // Add active class to the selected tab and its panel
+      this.classList.add("active");
+      const panelId = this.getAttribute("data-tab");
+      document.getElementById(panelId).classList.add("active");
+
+      // Reset the size selection when switching tabs
+      const sizeSelectors = document.querySelectorAll(`#${panelId} select`);
+      sizeSelectors.forEach((selector) => {
+        selector.value = ""; // Reset to the default value
+      });
+
+      // Trigger change event to update product form
+      sizeSelectors.forEach((selector) => {
+        const event = new Event("change");
+        selector.dispatchEvent(event);
       });
     });
   });
+
+  // Handle size selection updates
+  panels.forEach((panel) => {
+    const sizeSelectors = panel.querySelectorAll("select");
+    sizeSelectors.forEach((selector) => {
+      selector.addEventListener("change", function () {
+        // Update selected value display
+        const selectedValueSpan = panel.querySelector("[data-selected-value]");
+        if (selectedValueSpan) {
+          selectedValueSpan.textContent = this.value || "Select a size";
+        }
+      });
+    });
+  });
+});
+
 </script>
     
   </variant-selects>
